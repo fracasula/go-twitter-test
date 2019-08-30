@@ -103,16 +103,28 @@ func (mr *messagesRouter) GetMessages(w http.ResponseWriter, r *http.Request) {
 
 	mr.logger.Printf("Querying with tag ID %d, dateStart %d and dateEnd %d", tagID, unixStart, unixEnd)
 
-	list, err := mr.messagesRepository.GetMessages(tagID, unixStart, unixEnd)
-	if err != nil {
-		RenderError(w, r, "Could not get messages", http.StatusInternalServerError)
-		mr.logger.Printf("Could not get messages: %v", err)
-		return
+	var responseBody interface{}
+	if query.Get("count") == "1" {
+		count, err := mr.messagesRepository.CountMessages(tagID, unixStart, unixEnd)
+		if err != nil {
+			RenderError(w, r, "Could not count messages", http.StatusInternalServerError)
+			mr.logger.Printf("Could not count messages: %v", err)
+			return
+		}
+
+		responseBody = count
+	} else {
+		list, err := mr.messagesRepository.GetMessages(tagID, unixStart, unixEnd)
+		if err != nil {
+			RenderError(w, r, "Could not get messages", http.StatusInternalServerError)
+			mr.logger.Printf("Could not get messages: %v", err)
+			return
+		}
+
+		responseBody = list
 	}
 
-	// @todo add count
-
-	render.JSON(w, r, list)
+	render.JSON(w, r, responseBody)
 }
 
 func (mr *messagesRouter) CreateMessage(w http.ResponseWriter, r *http.Request) {
