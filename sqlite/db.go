@@ -25,10 +25,18 @@ const tagsTable = `CREATE TABLE "tags" (
 	tag	TEXT UNIQUE
 )`
 
+const usersTable = `CREATE TABLE "users" (
+	id	INTEGER NOT NULL,
+	email	TEXT UNIQUE,
+	PRIMARY KEY(id)
+)`
+
 func LoadSchema(db *sql.DB) error {
-	_, err := db.Exec(tagsTable)
-	if err != nil {
+	if _, err := db.Exec(tagsTable); err != nil {
 		return fmt.Errorf("could not create tags table: %v", err)
+	}
+	if _, err := db.Exec(usersTable); err != nil {
+		return fmt.Errorf("could not create users table: %v", err)
 	}
 
 	return nil
