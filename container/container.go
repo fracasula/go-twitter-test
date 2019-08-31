@@ -6,10 +6,9 @@ import (
 	"go-twitter-test/repositories/messages"
 	"go-twitter-test/repositories/tags"
 	"go-twitter-test/repositories/users"
+	"go-twitter-test/sqlite"
 	"log"
 	"os"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 //go:generate counterfeiter . Container
@@ -45,12 +44,10 @@ func (c *container) Logger() *log.Logger {
 }
 
 func NewContainer(sqliteDsn string) (Container, error) {
-	db, err := sql.Open("sqlite3", sqliteDsn)
+	db, err := sqlite.New(sqliteDsn)
 	if err != nil {
-		return nil, fmt.Errorf("could not open a connection to %q: %v", sqliteDsn, err)
+		return nil, fmt.Errorf("container could not initialize db: %v", err)
 	}
-
-	db.SetMaxOpenConns(1)
 
 	return &container{
 		db:                 db,
