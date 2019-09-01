@@ -64,7 +64,7 @@ func (mr *messagesRouter) GetMessages(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dateStart := query.Get("dateStart")
-	dateEnd := query.Get("dateStart")
+	dateEnd := query.Get("dateEnd")
 	if dateStart != "" || dateEnd != "" {
 		if dateStart == "" || dateEnd == "" {
 			RenderError(w, r, "dateStart and dateEnd must be used together or not at all", http.StatusBadRequest)
@@ -100,8 +100,6 @@ func (mr *messagesRouter) GetMessages(w http.ResponseWriter, r *http.Request) {
 		unixStart = timeStart.Unix()
 		unixEnd = timeEnd.Unix()
 	}
-
-	mr.logger.Printf("Querying with tag ID %d, dateStart %d and dateEnd %d", tagID, unixStart, unixEnd)
 
 	var responseBody interface{}
 	if query.Get("count") == "1" {
