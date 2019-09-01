@@ -1,12 +1,16 @@
 package tags
 
 import (
+	"go-twitter-test/repositories/testutils"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestTagsRepository(t *testing.T) {
+	const dbDsn = "./testdata/test1.db"
+	db := testutils.SetUp(t, dbDsn)
+	defer testutils.TearDown(t, db, []string{dbDsn})
 
 	repo := New(db)
 	tagID, err := repo.Put("A Nice Tag") // expected: a-nice-tag

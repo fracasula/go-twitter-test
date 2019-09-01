@@ -22,29 +22,32 @@ func TestMessagesRepository(t *testing.T) {
 	formattedDateStart := now.Format("2006-01-02T15:04:05")
 
 	repo := New(db)
-	err := repo.Create(MessageCreate{
+	msgID, err := repo.Create(MessageCreate{
 		UserID:  1,
 		TagID:   1,
 		Message: "Message 1",
 	})
 	require.Nil(t, err)
+	require.EqualValues(t, 1, msgID)
 
-	err = repo.Create(MessageCreate{
+	msgID, err = repo.Create(MessageCreate{
 		UserID:  1,
 		TagID:   2, // using tag 2 here to test the filter by tag later
 		Message: "Message 2",
 	})
 	require.Nil(t, err)
+	require.EqualValues(t, 2, msgID)
 
 	// sleeping 2 seconds to allow tests assertions by date range
 	time.Sleep(2 * time.Second)
 
-	err = repo.Create(MessageCreate{
+	msgID, err = repo.Create(MessageCreate{
 		UserID:  1,
 		TagID:   1,
 		Message: "Message 3",
 	})
 	require.Nil(t, err)
+	require.EqualValues(t, 3, msgID)
 
 	// testing CountMessages
 	count, err := repo.CountMessages(0, dateStart, dateEnd)

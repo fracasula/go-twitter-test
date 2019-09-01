@@ -65,6 +65,50 @@ func TestMessagesRouter_CreateMessage(t *testing.T) {
 	)
 }
 
+func TestMessagesRouter_CreateMessage_UserHeaderMissing(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_CreateMessage_UserNotFound(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_CreateMessage_RequestBodyInvalid(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_CreateMessage_TagsRepositoryFailure(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_CreateMessage_MessagesRepositoryFailure(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_GetMessages(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_GetMessages_FilterByTagAndDateRange(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_GetMessages_Count(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_GetMessages_CountByTagAndDateRange(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_GetMessages_TagNotFound(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
+func TestMessagesRouter_GetMessages_MessagesRepositoryFailure(t *testing.T) {
+	t.Skip("@TODO implement")
+}
+
 func getRequestBody(t *testing.T, msg message) *bytes.Buffer {
 	body, err := json.Marshal(msg)
 	require.Nil(t, err)
