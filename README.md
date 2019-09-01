@@ -120,3 +120,17 @@ hypothetical event driven architecture that could potentially work with the kind
 5. `Event Dispatcher API`: its only responsibility is to allow other actors in the architecture to create events which
    then end up in the `Event Store` thus the loop would start again from point 1 (the events are picked up by `Reducers` 
    which persist a folded state into the `Discoverable Data Set` and so on)
+
+# Running the application
+
+Just run `make` and you should have a docker container acting as HTTP server mapped on your `localhost:8080`.
+
+# Running the tests
+
+Just run `make test`. It will generate the needed files and then it will run the tests.
+
+# Manual tests
+
+If you'd like to run a few manual tests yourself I've added a `postman_collection.json` file that you can import in
+your [Postman](https://www.getpostman.com) installation. You'll find two sample requests in there, one for creating
+messages and one for getting them.

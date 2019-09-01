@@ -16,3 +16,8 @@ run:
 		-v $$(pwd)/db.sqlite:/db.sqlite \
 		-p $(HTTP_PORT):$(HTTP_PORT) \
 		$(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: test
+test:
+	go generate ./...
+	go test ./... | grep -v "no test files"
