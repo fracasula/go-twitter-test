@@ -7,8 +7,9 @@ import (
 )
 
 // Repository represents a contract for querying messages from an arbitrary data source
+//go:generate counterfeiter . Repository
 type Repository interface {
-	Create(msg MessageCreate) error
+	Create(msg MessageCreate) (int64, error)
 	GetMessages(tagID, dateStart, dateEnd int64) ([]MessageList, error)
 	CountMessages(tagID, dateStart, dateEnd int64) (int64, error)
 }
@@ -17,10 +18,10 @@ type messagesRepository struct {
 	db *sql.DB
 }
 
-func (r *messagesRepository) Create(msg MessageCreate) error {
+func (r *messagesRepository) Create(msg MessageCreate) (int64, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return fmt.Errorf("could not start transaction for creating a new message: %v", err)
+		return 0, fmt.Errorf("could not start transaction for creating a new message: %v", err)
 	}
 
 	res, err := tx.Exec(
@@ -28,7 +29,7 @@ func (r *messagesRepository) Create(msg MessageCreate) error {
 		msg.UserID, msg.Message, time.Now().Unix(), // https://www.sqlite.org/datatype3.html#datetime
 	)
 	if err != nil {
-		return fmt.Errorf("could not create message with user ID %d and message %q: %v", msg.UserID, msg.Message, err)
+		return 0, fmt.Errorf("could not create message with user ID %d and message %q: %v", msg.UserID, msg.Message, err)
 	}
 
 	msgID, err := res.LastInsertId()
@@ -38,7 +39,7 @@ func (r *messagesRepository) Create(msg MessageCreate) error {
 			err = fmt.Errorf("could not rollback transaction (after %v): %v", err, rollbackErr)
 		}
 
-		return err
+		return 0, err
 	}
 
 	_, err = tx.Exec("INSERT INTO message_tag (message_id, tag_id) VALUES (?, ?)", msgID, msg.TagID)
@@ -48,16 +49,14 @@ func (r *messagesRepository) Create(msg MessageCreate) error {
 			err = fmt.Errorf("could not rollback transaction (after %v): %v", err, rollbackErr)
 		}
 
-		return err
+		return 0, err
 	}
 
 	if err := tx.Commit(); err != nil {
-		return fmt.Errorf("could not commit transaction while creating new message: %v", err)
+		return 0, fmt.Errorf("could not commit transaction while creating new message: %v", err)
 	}
 
-	msg.ID = msgID
-
-	return nil
+	return msgID, nil
 }
 
 func (r *messagesRepository) GetMessages(tagID, dateStart, dateEnd int64) ([]MessageList, error) {

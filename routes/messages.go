@@ -175,16 +175,16 @@ func (mr *messagesRouter) CreateMessage(w http.ResponseWriter, r *http.Request) 
 		Message: body.Text,
 	}
 
-	if err := mr.messagesRepository.Create(msg); err != nil {
+	msgID, err := mr.messagesRepository.Create(msg)
+	if err != nil {
 		RenderError(w, r, "Could not create message", http.StatusInternalServerError)
 		mr.logger.Printf("Could not create message %+v: %v", msg, err)
 		return
 	}
 
-	mr.logger.Printf("%+v", msg)
-
-	w.Header().Set("Location", "/v1/messages/"+strconv.FormatInt(msg.ID, 10))
+	w.Header().Set("Location", "/v1/messages/"+strconv.FormatInt(msgID, 10))
 	render.Status(r, http.StatusCreated)
+	render.JSON(w, r, nil)
 }
 
 type message struct {

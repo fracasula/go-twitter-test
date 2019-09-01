@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+//go:generate counterfeiter . Repository
 type Repository interface {
 	Get(userID int64) (*User, error)
 }

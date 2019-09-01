@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+//go:generate counterfeiter . Repository
 type Repository interface {
 	Put(tag string) (int64, error)
 	GetID(tag string) (int64, error)
