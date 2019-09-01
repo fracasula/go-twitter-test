@@ -8,7 +8,7 @@ import (
 
 // Repository represents a contract for querying messages from an arbitrary data source
 type Repository interface {
-	Create(msg *MessageCreate) error
+	Create(msg MessageCreate) error
 	GetMessages(tagID, dateStart, dateEnd int64) ([]MessageList, error)
 	CountMessages(tagID, dateStart, dateEnd int64) (int64, error)
 }
@@ -17,7 +17,7 @@ type messagesRepository struct {
 	db *sql.DB
 }
 
-func (r *messagesRepository) Create(msg *MessageCreate) error {
+func (r *messagesRepository) Create(msg MessageCreate) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return fmt.Errorf("could not start transaction for creating a new message: %v", err)

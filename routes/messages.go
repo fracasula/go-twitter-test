@@ -175,7 +175,7 @@ func (mr *messagesRouter) CreateMessage(w http.ResponseWriter, r *http.Request) 
 		Message: body.Text,
 	}
 
-	if err := mr.messagesRepository.Create(&msg); err != nil {
+	if err := mr.messagesRepository.Create(msg); err != nil {
 		RenderError(w, r, "Could not create message", http.StatusInternalServerError)
 		mr.logger.Printf("Could not create message %+v: %v", msg, err)
 		return
