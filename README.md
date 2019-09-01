@@ -4,30 +4,31 @@ Just a code test I did with Go to create a Twitter like sample app.
 
 # API endpoints
 
-## POST /messages
+## POST /v1/messages
 
 Used to create tagged messages.
 
 **HTTP Request:**
 * `X-User-ID`: added by an API Gateway based upon an `Authorization` header
 * `Content-Type`: `application/json`
-* Body: `{text:"A very meaningful message",tag:"philotimo"}`
+* Body: `{"text":"A very meaningful message","tag":"philotimo"}`
 
 **HTTP Response:**
 * Status codes
   * `201` with Location header on success pointing to the newly created resource
   * `400` if the body is malformed or invalid
-  * `413` if the message is too long
+  * `401`|`403` for auth errors
   * `500` when there's a backend error (e.g. can't connect to the DB)
 * `Content-Type`: doesn't matter
   * the client will just have the status code to understand what is going on for now
   * devs can check the logs for more details about why a backend error has happened
-  * later error messages can be returned as JSONs if needed to give clients more context
+  * later better error messages can be returned as JSONs if needed to give clients more context
 
 
-## GET /messages
+## GET /v1/messages
 
-Used to get all messages or a filtered set of messages.
+Used to get all messages or a filtered set of messages (getting a single message is not supported for now
+e.g. `GET /messages/<id>`).
 
 Supported filters:
 * filter by tag
@@ -44,9 +45,10 @@ Supported filters:
 * Status codes
   * `200` OK
   * `400` if one or more the query parameters are invalid
+  * `403` if no user ID is specified in the `X-User-ID` header
   * `500` when there's a backend error (e.g. can't connect to the DB)
 * `Content-Type`: `application/json`
-  * example: `[{text:"A very meaningful message",tag:"philotimo"}]` or `123` if `count` is `1`
+  * example: `[{"text":"A very meaningful message","tag":"philotimo"}]` or `123` if `count` is `1`
   * alternative: we could potentially have another endpoint (e.g. `GET /messages/count`) just for the count
 
 **Note:** pagination won't be handled here, there's plenty of literature about how to handle pagination properly.
@@ -118,3 +120,17 @@ hypothetical event driven architecture that could potentially work with the kind
 5. `Event Dispatcher API`: its only responsibility is to allow other actors in the architecture to create events which
    then end up in the `Event Store` thus the loop would start again from point 1 (the events are picked up by `Reducers` 
    which persist a folded state into the `Discoverable Data Set` and so on)
+
+# Running the application
+
+Just run `make` and you should have a docker container acting as an HTTP server mapped on your `localhost:8080`.
+
+# Running the tests
+
+Just run `make test`. It will generate the needed files and then it will run the tests.
+
+# Manual tests
+
+If you'd like to run a few manual tests yourself I've added a `postman_collection.json` file that you can import in
+your [Postman](https://www.getpostman.com) installation. You'll find two sample requests in there, one for creating
+messages and one for getting them.

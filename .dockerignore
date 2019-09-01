@@ -1,0 +1,6 @@
+.git/
+.idea/
+.dockerignore
+Dockerfile
+Makefile
+**/*fakes/

@@ -1,0 +1,105 @@
+{
+	"info": {
+		"_postman_id": "735c6487-6b54-48ee-ac0a-02fef5dd1d37",
+		"name": "go-twitter-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /messages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/messages?dateStart=2019-08-01&dateEnd=2019-09-03&count=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "dateStart",
+							"value": "2019-08-01"
+						},
+						{
+							"key": "dateEnd",
+							"value": "2019-09-03"
+						},
+						{
+							"key": "count",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /messages",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-User-ID",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"text\":\"A very meaningful message\",\"tag\":\"philotimo\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"messages"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "350acd5d-8838-4b0e-b3a9-7d737cc1c616",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "00fca07b-9a7b-4505-b892-7f0933f7c655",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
